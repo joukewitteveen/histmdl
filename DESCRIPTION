@@ -1,0 +1,13 @@
+Package: histmdl
+Type: Package
+Title: A Most Informative Histogram-like Model
+Version: 0.2-2
+Date: 2013-01-30
+Author: Jouke Witteveen and Richard Gill
+Maintainer: Jouke Witteveen <j.witteveen@gmail.com>
+Description: This package implements an estimation of the maximum
+	likelihood parameter for a histogram-like model. The parameter
+	space is equipped with a prior to so that the model follows
+	principles from MDL theory.
+License: GPL (>= 2)
+ByteCompile: yes
