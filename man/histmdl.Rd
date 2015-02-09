@@ -1,5 +1,5 @@
-\name{hist.mdl}
-\alias{hist.mdl}
+\name{histmdl}
+\alias{histmdl}
 \title{
   Most Informative Histograms
 }
@@ -10,14 +10,14 @@
   \code{\link{plot.histogram}}, before it is returned.
 }
 \usage{
-hist.mdl(x, model = "Witteveen", gain = 0, support = 4,
-         plot = TRUE, add = FALSE,
-         density = NULL, angle = 45, col = NULL,
-         border = par("fg"), lty = NULL,
-         main = paste("Histogram of", xname), sub = NULL,
-         xlab = xname, ylab = "Density",
-         xlim = range(r$breaks), ylim = range(0, r$density),
-         axes = TRUE, ann = TRUE, \ldots)
+histmdl(x, model = "Witteveen", gain = 0, support = 4,
+        plot = TRUE, add = FALSE,
+        density = NULL, angle = 45, col = NULL,
+        border = par("fg"), lty = NULL,
+        main = paste("Histogram of", xname), sub = NULL,
+        xlab = xname, ylab = "Density",
+        xlim = range(r$breaks), ylim = range(0, r$density),
+        axes = TRUE, ann = TRUE, \ldots)
 }
 \arguments{
   \item{x}{a vector of values for which the histogram is desired.}
@@ -79,11 +79,11 @@ hist.mdl(x, model = "Witteveen", gain = 0, support = 4,
   set.seed (28011988)
 
   x <- c (rnorm (1000) - 6, rnorm (1000) + 6)
-  hist.mdl (x, gain=2, col="peru")
+  histmdl (x, gain=2, col="peru")
   hist (x, freq=FALSE, add=TRUE, col="#80808080")
 
   x <- c (runif (50), 3 * runif (50))
-  hist.mdl (x, col="peru", ylim=0:1)
+  histmdl (x, col="peru", ylim=0:1)
   hist (x, freq=FALSE, add=TRUE, col="#80808080")
 }
 \keyword{histogram}

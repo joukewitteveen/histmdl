@@ -1,6 +1,5 @@
 \name{histmdl-package}
 \alias{histmdl-package}
-\alias{histmdl}
 \docType{package}
 \title{
   Informative Histograms-like Models
@@ -13,11 +12,11 @@
   \tabular{ll}{
     Package: \tab histmdl\cr
     Type:    \tab Package\cr
-    Version: \tab 0.2\cr
-    Date:    \tab 2013-01-30\cr
+    Version: \tab 0.3\cr
+    Date:    \tab 2015-02-09\cr
     License: \tab GPL\cr
   }
-  See: \code{\link{hist.mdl}}.
+  See: \code{\link{histmdl}}.
 }
 \author{
 Jouke Witteveen and Richard Gill
@@ -29,5 +28,5 @@ Maintainer: Jouke Witteveen <j.witteveen@gmail.com>
 }
 \keyword{ package }
 \seealso{
-  \code{\link{hist.mdl}}
+  \code{\link{histmdl}}
 }

@@ -1,38 +1,41 @@
 #include <assert.h>
 #include <limits.h>
 #include <R.h>
+#include <Rinternals.h>
 
 #define likely( x ) __builtin_expect( !!( x ), 1 )
 
 
-/* Highest index of a value less than or equal to a search value
- * x: sorted array of values
- * l: length of x
- * v: search value
- * i: index, initialized to 0
- */
-void maxLE( double const * x, int const * l, double const * v, int * i ){
-  assert( *i == 0 );
-  if( *l <= 0 ) return;
-  // The highest index in x
-  int max = *l - 1;
-  // Initialize d to the floor of the base 2 logarithm of max
-  int d = max | ( max >> 1 );
-  d |= d >> 2; d |= d >> 4; d |= d >> 8; d |= d >> 16;
-#if INT_MAX > (1 << 32)
-  d |= d >> 32;
+/* Highest index of a value less than or equal to a search value */
+SEXP maxLE( SEXP Rx, SEXP Rv ){
+  assert( isReal( Rx ) );
+  double *x, v;
+  int l, i, b;
+
+  // Set l to the highest index in x
+  l = length( Rx ) - 1;
+  if( l < 0 ) return R_NilValue;
+  x = REAL( Rx );
+  v = asReal( Rv );
+  if( x[0] > v ) return R_NilValue;
+  // Set b to the most significant bit in l
+  b = l | ( l >> 1 );
+  b |= b >> 2; b |= b >> 4; b |= b >> 8; b |= b >> 16;
+#if INT_MAX > ( 1 << 32 )
+  b |= b >> 32;
 #endif
-  d ^= d >> 1;
-  do {
-    // Verify that *i + d is within range
-    if( likely( max & d ) ){
-      if( likely( x[*i | d] > *v ) ) {
+  b ^= b >> 1;
+
+  for( i = 0; b; b >>= 1 ){
+    // Verify that i + b is within range
+    if( likely( l & b ) ){
+      if( likely( x[i | b] > v ) ){
         // No more range checking is needed
-        while( d >>= 1 ) if( x[*i | d] <= *v ) *i |= d;
+        while( b >>= 1 ) if( x[i | b] <= v ) i |= b;
         break;
-      } else *i |= d;
+      } else i |= b;
     } //if
-  } while( d >>= 1 );
-  if( *x <= *v ) ++*i;
+  }
+  return ScalarInteger( i + 1 );
 } //maxLE
 

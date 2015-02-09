@@ -1,2 +1,2 @@
-export(hist.mdl)
+export(histmdl)
 useDynLib(histmdl, maxLE)

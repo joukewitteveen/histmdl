@@ -1,7 +1,5 @@
 # Binary search, equivalent to max (which (x <= value)), but faster
-startIndex <- function (x, value)
-	.C (maxLE, as.numeric (x), length (x), as.numeric (value),
-	    i=as.integer (0), DUP=FALSE)$i
+startIndex <- function (x, value) .Call (maxLE, x, value)
 
 
 # If possible, return an interval covering more than `support` points
@@ -40,11 +38,10 @@ bestInterval <- function (x, support=3) {
 
 
 # The returned densities are so that division by m yields true densities
+# x: a sorted non-empty double-precision vector
 # gain: minimum complexity gain (units depend on the base of the logarithms)
 # support: the minimum number of data points per bin
 recursiveIntervals <- function (x, gain=0, support=3) {
-	if (is.unsorted (x))
-		stop ("'x' must be sorted")
 	m <- length (x)
 	breaks <- c (x[1], x[m])
 	density <- m / (breaks[2] - breaks[1])
@@ -73,16 +70,19 @@ recursiveIntervals <- function (x, gain=0, support=3) {
 }
 
 
-hist.mdl <- function (x, model="Witteveen", gain=0, support=4, plot=TRUE,
-                      add=FALSE, density=NULL, angle=45, col=NULL,
-                      border=par ("fg"), lty=NULL,
-                      main=paste ("Histogram of" , xname), sub=NULL,
-                      xlab=xname, ylab="Density", xlim=range (r$breaks),
-                      ylim=range (0, r$density), axes=TRUE, ann=TRUE, ...) {
+histmdl <- function (x, model="Witteveen", gain=0, support=4, plot=TRUE,
+                     add=FALSE, density=NULL, angle=45, col=NULL,
+                     border=par ("fg"), lty=NULL,
+                     main=paste ("Histogram of" , xname), sub=NULL,
+                     xlab=xname, ylab="Density", xlim=range (r$breaks),
+                     ylim=range (0, r$density), axes=TRUE, ann=TRUE, ...) {
+	xname <- paste (deparse (substitute (x), 500), collapse="\n")
+	x <- sort (as.numeric (x))
+	if (length(x) == 0 || anyNA (x))
+		stop ("'x' must be non-empty and solely numeric")
 	if (model != "Witteveen")
 		stop (paste ("Unsupported model:", model))
-	xname <- paste (deparse (substitute (x), 500), collapse="\n")
-	r <- structure (c (recursiveIntervals (sort (x), gain, support),
+	r <- structure (c (recursiveIntervals (x, gain, support),
 	                   list (equidist=FALSE, xname=xname)),
 	                class="histogram")
 	r$density <- r$density / length (x)
