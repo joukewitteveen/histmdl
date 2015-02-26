@@ -13,7 +13,7 @@
     Package: \tab histmdl\cr
     Type:    \tab Package\cr
     Version: \tab 0.3\cr
-    Date:    \tab 2015-02-09\cr
+    Date:    \tab 2015-02-19\cr
     License: \tab GPL\cr
   }
   See: \code{\link{histmdl}}.
@@ -23,9 +23,7 @@ Jouke Witteveen and Richard Gill
 
 Maintainer: Jouke Witteveen <j.witteveen@gmail.com>
 }
-\references{
-  TBA
-}
+%\references{ TBA }
 \keyword{ package }
 \seealso{
   \code{\link{histmdl}}

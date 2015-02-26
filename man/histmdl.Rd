@@ -66,9 +66,7 @@ histmdl(x, model = "Witteveen", gain = 0, support = 4,
     section is part of.}
   \item{xname}{a character string with the actual \code{x} argument name.}
 }
-\references{
-  TBA
-}
+%\references{ TBA }
 \author{
   Jouke Witteveen and Richard Gill
 }
@@ -78,11 +76,11 @@ histmdl(x, model = "Witteveen", gain = 0, support = 4,
 \examples{
   set.seed (28011988)
 
-  x <- c (rnorm (1000) - 6, rnorm (1000) + 6)
+  x <- c (rnorm (1000, -6), rnorm (1000, 6))
   histmdl (x, gain=2, col="peru")
   hist (x, freq=FALSE, add=TRUE, col="#80808080")
 
-  x <- c (runif (50), 3 * runif (50))
+  x <- c (runif (50), runif (50, max=3))
   histmdl (x, col="peru", ylim=0:1)
   hist (x, freq=FALSE, add=TRUE, col="#80808080")
 }

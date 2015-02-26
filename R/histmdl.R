@@ -10,7 +10,7 @@ bestInterval <- function (x, support=3) {
 	# The forest of Kruskals algorithm as a vector of interval left sides
 	K <- x$values
 	best <- sapply (1:length (K), function (i)
-		list (left=K[i], right=K[i], length=x$values[i], complexity=Inf))
+		list (left=K[i], right=K[i], length=x$lengths[i], complexity=Inf))
 	for (left in x$values[order (diff (x$values))]) {
 		i <- startIndex (K, left)
 		# Construct the candidate interval details
@@ -37,7 +37,7 @@ bestInterval <- function (x, support=3) {
 }
 
 
-# The returned densities are so that division by m yields true densities
+# The returned densities are not probability densities
 # x: a sorted non-empty double-precision vector
 # gain: minimum complexity gain (units depend on the base of the logarithms)
 # support: the minimum number of data points per bin
@@ -47,7 +47,7 @@ recursiveIntervals <- function (x, gain=0, support=3) {
 	density <- m / (breaks[2] - breaks[1])
 	if (m >= 2 * support &&
 	    (ch <- bestInterval (x, support))$complexity +
-	    m * log2 (density) + 2 * log2 (m) - 1 < -gain ) {
+	    m * log2 (density) + 2 * log2 (m) - 1 < -gain) {
 		width <- ch$right - ch$left
 		iL <- startIndex (x, ch$left)
 		while (identical (x[iL], x[iL - 1])) iL <- iL - 1
@@ -85,7 +85,9 @@ histmdl <- function (x, model="Witteveen", gain=0, support=4, plot=TRUE,
 	r <- structure (c (recursiveIntervals (x, gain, support),
 	                   list (equidist=FALSE, xname=xname)),
 	                class="histogram")
-	r$density <- r$density / length (x)
+	# By contracting intervals, some points may get counted multiple times
+	# r$density <- r$density / length (x)
+	r$density <- r$density / sum (r$density * diff (r$breaks))
 	if (plot) {
 		dev.hold (); on.exit (dev.flush ())
 		if (!add) {
