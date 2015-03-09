@@ -53,10 +53,10 @@ recursiveIntervals <- function (x, gain=0, support=3) {
 		while (identical (x[iL], x[iL - 1])) iL <- iL - 1
 		iR <- startIndex (x, ch$right)
 		rIn <- recursiveIntervals (x[iL : iR], gain, support)
-		# It is crucial that the equality is in the non-shifted part because
+		# It is crucial that the left boundary point is kept because
 		# ch$right - width may not evaluate equal to ch$left (rounding)
-		rOut <- recursiveIntervals (c (head (x, iL),
-		                               tail (x, -iR) - width), gain, support)
+		rOut <- recursiveIntervals (c (head (x, iL), tail (x, -iR) - width),
+		                            gain, support)
 		breaks <- c (rOut$breaks[rOut$breaks < ch$left],
 		             rIn$breaks,
 		             rOut$breaks[rOut$breaks > ch$left] + width)

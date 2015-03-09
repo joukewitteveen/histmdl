@@ -3,8 +3,6 @@
 #include <R.h>
 #include <Rinternals.h>
 
-#define likely( x ) __builtin_expect( !!( x ), 1 )
-
 
 /* Highest index of a value less than or equal to a search value */
 SEXP maxLE( SEXP Rx, SEXP Rv ){
@@ -28,8 +26,8 @@ SEXP maxLE( SEXP Rx, SEXP Rv ){
 
   for( i = 0; b; b >>= 1 ){
     // Verify that i + b is within range
-    if( likely( l & b ) ){
-      if( likely( x[i | b] > v ) ){
+    if( l & b ){
+      if( x[i | b] > v ){
         // No more range checking is needed
         while( b >>= 1 ) if( x[i | b] <= v ) i |= b;
         break;
