@@ -77,9 +77,12 @@ histmdl <- function (x, model="Witteveen", gain=0, support=4, plot=TRUE,
                      xlab=xname, ylab="Density", xlim=range (r$breaks),
                      ylim=range (0, r$density), axes=TRUE, ann=TRUE, ...) {
 	xname <- paste (deparse (substitute (x), 500), collapse="\n")
-	x <- sort (as.numeric (x))
-	if (length(x) == 0 || anyNA (x))
-		stop ("'x' must be non-empty and solely numeric")
+	if (!is.numeric (x))
+		stop ("'x' must be numeric")
+	# Sorting removes NAs
+	x <- sort (as.double (x))
+	if (length (x) == 0)
+		stop ("'x' must be non-empty")
 	if (model != "Witteveen")
 		stop (paste ("Unsupported model:", model))
 	r <- structure (c (recursiveIntervals (x, gain, support),
