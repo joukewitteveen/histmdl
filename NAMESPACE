@@ -1,2 +1,4 @@
-export(histmdl)
 useDynLib(histmdl, maxLE)
+importFrom("graphics", "plot")
+importFrom("utils", "head", "tail")
+export(histmdl)

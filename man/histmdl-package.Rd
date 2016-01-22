@@ -12,8 +12,8 @@
   \tabular{ll}{
     Package: \tab histmdl\cr
     Type:    \tab Package\cr
-    Version: \tab 0.4\cr
-    Date:    \tab 2015-03-16\cr
+    Version: \tab 0.5\cr
+    Date:    \tab 2016-01-26\cr
     License: \tab GPL\cr
   }
   See: \code{\link{histmdl}}.
