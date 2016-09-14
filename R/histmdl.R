@@ -94,6 +94,14 @@ histmdl <- function (x, model="Witteveen", gain=0, precision=0, support=4,
 		stop (paste ("Unsupported model:", model))
 	if (!is.numeric (precision) || precision < 0)
 		stop ("'precision' must be non-negative")
+	if (!is.numeric (support) || support < 2)
+		stop ("'support' must be at least 2")
+	if (precision == 0)
+		for (w in with (rle (x),
+		                paste ("infinite density ignored at value", values,
+		                       "occurring", lengths, "times",
+		                       "while 'precision' is 0")[lengths >= support]))
+			warning (w)
 	r <- structure (c (recursiveIntervals (x, gain, precision, support),
 	                   list (equidist=FALSE, xname=xname)),
 	                class="histogram")
