@@ -8,36 +8,35 @@ bestInterval <- function (x, precision=0, support=3) {
 	x <- rle (x)
 	# The forest of Kruskals algorithm as a vector of interval left sides
 	K <- x$values
-	best <- sapply (1:length (K), function (i) {
-		if (precision > 0 && x$lengths[i] >= support)
-			complexity <- x$lengths[i] * log2 (precision / x$lengths[i]) +
-		                  (m - x$lengths[i]) * log2 (M / (m - x$lengths[i]))
+	best <- mapply (function (value, count) {
+		if (precision > 0 && count >= support)
+			complexity <- count * log2 (precision / count) +
+		                  (m - count) * log2 (M / (m - count))
 		else
 			# Prevent infinite densities
 			complexity <- Inf
-		list (left=K[i], right=K[i], length=x$lengths[i],
-		      complexity=complexity)
-	})
-	for (v in x$values[order (diff (x$values))]) {
-		i <- startIndex (K, v)
+		list (left=value, right=value, count=count, complexity=complexity)
+	}, x$values, x$lengths)
+	for (left in x$values[order (diff (x$values))]) {
+		i <- startIndex (K, left)
 		# Construct the candidate interval details
 		ch <- list (left=best[, i]$left, right=best[, i + 1]$right,
-		            length=as.integer (NA), complexity=as.numeric (NA))
+		            count=as.integer (NA), complexity=as.numeric (NA))
 		MIn <- ch$right - ch$left
 		mIn <- sum (x$lengths[startIndex (x$values, ch$left) :
 		                      startIndex (x$values, ch$right)])
-		ch$length <- mIn
+		ch$count <- mIn
 		ch$complexity <- mIn * log2 ((MIn + precision) / mIn) + if (mIn != m)
 			(m - mIn) * log2 ((M - MIn) / (m - mIn)) else 0
 		# Unite the intervals: this is a speed bottleneck
 		K <- K[-(i + 1)]
 		if (best[, i]$complexity < best[, i + 1]$complexity ||
-		    best[, i + 1]$length < support)
+		    best[, i + 1]$count < support)
 			best <- best[, -(i + 1), drop=FALSE]
 		else
 			best <- best[, -i, drop=FALSE]
 		# Consider the candidate interval
-		if (ch$complexity < best[, i]$complexity || best[, i]$length < support)
+		if (ch$complexity < best[, i]$complexity || best[, i]$count < support)
 			best[, i] <- ch
 	}
 	drop (best)
@@ -94,7 +93,7 @@ histmdl <- function (x, model="Witteveen", gain=0, precision=0, support=4,
 	if (model != "Witteveen")
 		stop (paste ("Unsupported model:", model))
 	if (!is.numeric (precision) || precision < 0)
-		stop ("'precision' must be nonnegative")
+		stop ("'precision' must be non-negative")
 	r <- structure (c (recursiveIntervals (x, gain, precision, support),
 	                   list (equidist=FALSE, xname=xname)),
 	                class="histogram")
