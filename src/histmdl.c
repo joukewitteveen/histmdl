@@ -1,7 +1,9 @@
 #include <assert.h>
 #include <limits.h>
+#include <stddef.h> // for NULL
 #include <R.h>
 #include <Rinternals.h>
+#include <R_ext/Rdynload.h>
 
 
 /* Highest index of a value less than or equal to a search value */
@@ -33,7 +35,18 @@ SEXP maxLE( SEXP Rx, SEXP Rv ){
         break;
       } else i |= b;
     } //if
-  }
+  } //for
   return ScalarInteger( i + 1 );
 } //maxLE
 
+
+static const R_CallMethodDef CallEntries[] = {
+  { "maxLE", (DL_FUNC) &maxLE, 2 },
+  { NULL, NULL, 0 }
+};
+
+
+void R_init_histmdl( DllInfo *dll ){
+  R_registerRoutines( dll, NULL, CallEntries, NULL, NULL );
+  R_useDynamicSymbols( dll, FALSE );
+} //R_init_histmdl
